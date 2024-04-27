@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Weather</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+        #form-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        input[type="text"], input[type="date"] {
+            padding: 10px;
+            margin: 0 10px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #004494;
+        }
+        .charts-container {
+            display: grid;
+            grid-template-columns: 50% 50%;
+        }
+        .chart {
+            background: white;
+            width: auto;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            flex: 1 1 300px; /* Responsive flex basis */
+        }
+    </style>
+</head>
+
+<body>
+    <section>
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">
+                    Weather Forecast and Analysis
+                </h1>
+            </div>
+        </div>
+    </section>
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div id="form-container">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div style="display: flex">
+                            {{location_form.as_p}}
+                            {{startDate_form.as_p}}
+                            {{endDate_form.as_p}}
+                        </div>
+                        <div class="col-12">
+                            <button type="submit"  class="button is-info">
+                                Forecast/Analysis
+                            </button>
+                        </div>
+                        
+                        {% comment %} {% if message %}
+                            <div class="notification {{ message_class }}">{{ message }}</div>
+                        {% endif %} {% endcomment %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="charts-container">
+                    <div class="chart">
+                        <canvas id="temperatureChart"></canvas>
+                    </div>
+                    <div class="chart">
+                        <canvas id="humidityChart"></canvas>
+                    </div>
+                    <div class="chart">
+                        <canvas id="precipitationChart"></canvas>
+                    </div>
+                    <div class="chart">
+                        <canvas id="windSpeedChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    </footer>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    
+    {% comment %} var temperatureData = [20, 21, 19, 22, 24];
+    var humidityData = [60, 65, 70, 58, 75];
+    var precipitationData = [2, 1, 0, 0.5, 1.5];
+    var windSpeedData = [10, 15, 12, 20, 18]; {% endcomment %}
+
+    var labels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+
+    Chart.defaults.font.size = 24;
+    // Plotting Temperature Chart
+    new Chart(document.getElementById('temperatureChart'), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Temperature (°C)',
+                data: {{temperatures}},
+                bordergroundColor: 'red',
+            }]
+        }
+    });
+
+    // Plotting Humidity Chart
+    new Chart(document.getElementById('humidityChart'), {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Humidity (%)',
+                data: {{humidities}},
+                borderColor: 'blue',
+                fill: false
+            }]
+        }
+    });
+
+    // Plotting Precipitation Chart
+    new Chart(document.getElementById('precipitationChart'), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Precipitation (mm)',
+                data: {{precipitations}},
+                backgroundColor: 'green'
+            }]
+        }
+    });
+
+    // Plotting Wind Speed Chart
+    new Chart(document.getElementById('windSpeedChart'), {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Wind Speed (km/h)',
+                data: {{wind_speeds}},
+                borderColor: 'purple',
+                fill: false
+            }]
+        }
+    });
+</script>
+
+</html>
