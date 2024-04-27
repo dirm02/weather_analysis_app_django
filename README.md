@@ -15,9 +15,9 @@ You can run weather_app_django project.
 
 ## Documentation
 * After running the app, if you just click [submit] without inputting any paramters, you can get  the forecast of next 15 days weather.
-![forecasting](img/forecast.png)
+![forecasting](img/forecast.PNG)
 * If you click [submit] after inputting [Start Date] and [End Date], you can get the analysis data of the weather in that range.
-![analyzing](img/analysis.png)
+![analyzing](img/analysis.PNG)
 
 ## Contact
 
